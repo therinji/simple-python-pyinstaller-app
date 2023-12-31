@@ -1,5 +1,5 @@
 node {
-    
+
     withDockerContainer('python:3.12.1-alpine3.19') {
     // some block
         stage('Build'){
@@ -17,5 +17,18 @@ node {
 
     stage('Manual approval') {
         input message: 'Lanjutkan ke tahap Deploy?'
+    }
+
+    stage('Deploy') {
+        environment {
+            VOLUME = '$(pwd)/sources:/src'
+            IMAGE = 'cdrx/pyinstaller-linux:python2'
+        }
+        steps {
+            dir(path: env.BUILD_ID) {
+                unstash(name: 'compiled-results')
+                sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
+            }
+        }
     }
 }

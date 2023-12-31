@@ -1,4 +1,8 @@
 node {
+    options {
+        skipStagesAfterUnstable()
+    }
+
     withDockerContainer('python:3.12.1-alpine3.19') {
     // some block
         stage('Build'){
@@ -12,5 +16,9 @@ node {
         stage('Test'){
             sh 'py.test --junit-xml test-reports/results.xml sources/test_calc.py' 
         }
+    }
+
+    stage('Manual approval') {
+        input message: 'Lanjutkan ke tahap Deploy?'
     }
 }

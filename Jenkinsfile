@@ -1,8 +1,5 @@
 node {
-    options {
-        skipStagesAfterUnstable()
-    }
-
+    
     withDockerContainer('python:3.12.1-alpine3.19') {
     // some block
         stage('Build'){
